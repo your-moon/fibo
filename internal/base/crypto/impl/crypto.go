@@ -7,8 +7,8 @@ import (
 	"github.com/golang-jwt/jwt"
 	"golang.org/x/crypto/bcrypt"
 
-	"go-backend-template/internal/base/crypto"
-	"go-backend-template/internal/base/errors"
+	"fibo/internal/base/crypto"
+	"fibo/internal/base/errors"
 )
 
 func NewCrypto() crypto.Crypto {

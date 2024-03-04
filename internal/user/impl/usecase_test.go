@@ -8,11 +8,11 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 
-	"go-backend-template/internal/user"
+	"fibo/internal/user"
 
-	cryptoMock "go-backend-template/internal/base/crypto/mock"
-	dbMock "go-backend-template/internal/base/database/mock"
-	userMock "go-backend-template/internal/user/mock"
+	cryptoMock "fibo/internal/base/crypto/mock"
+	dbMock "fibo/internal/base/database/mock"
+	userMock "fibo/internal/user/mock"
 )
 
 func TestUserUsecases_Add(t *testing.T) {

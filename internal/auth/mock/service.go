@@ -4,7 +4,7 @@ package mocks
 
 import (
 	context "context"
-	auth "go-backend-template/internal/auth"
+	auth "fibo/internal/auth"
 
 	mock "github.com/stretchr/testify/mock"
 )

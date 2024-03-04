@@ -5,8 +5,8 @@ import (
 
 	"github.com/jackc/pgx/v4/pgxpool"
 
-	"go-backend-template/internal/base/database"
-	"go-backend-template/internal/base/errors"
+	"fibo/internal/base/database"
+	"fibo/internal/base/errors"
 )
 
 type Client struct {

@@ -2,21 +2,21 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 
-	"go-backend-template/api/cli"
-	"go-backend-template/api/http"
-
-	authImpl "go-backend-template/internal/auth/impl"
-	cryptoImpl "go-backend-template/internal/base/crypto/impl"
-	databaseImpl "go-backend-template/internal/base/database/impl"
-	userImpl "go-backend-template/internal/user/impl"
+	"fibo/api/cli"
+	"fibo/api/http"
+	authImpl "fibo/internal/auth/impl"
+	cryptoImpl "fibo/internal/base/crypto/impl"
+	databaseImpl "fibo/internal/base/database/impl"
+	userImpl "fibo/internal/user/impl"
 )
 
 func main() {
 	ctx := context.Background()
 	parser := cli.NewParser()
-
+	//
 	conf, err := parser.ParseConfig()
 	if err != nil {
 		log.Fatal(err)
@@ -28,6 +28,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println(err)
 
 	defer dbClient.Close()
 

@@ -3,10 +3,10 @@ package impl
 import (
 	"context"
 
-	"go-backend-template/internal/auth"
-	"go-backend-template/internal/base/crypto"
-	"go-backend-template/internal/base/errors"
-	"go-backend-template/internal/user"
+	"fibo/internal/auth"
+	"fibo/internal/base/crypto"
+	"fibo/internal/base/errors"
+	"fibo/internal/user"
 )
 
 type AuthServiceOpts struct {

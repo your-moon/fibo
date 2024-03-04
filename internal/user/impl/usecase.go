@@ -3,9 +3,9 @@ package impl
 import (
 	"context"
 
-	"go-backend-template/internal/base/crypto"
-	"go-backend-template/internal/base/database"
-	"go-backend-template/internal/user"
+	"fibo/internal/base/crypto"
+	"fibo/internal/base/database"
+	"fibo/internal/user"
 )
 
 type UserUsecasesOpts struct {

@@ -1,7 +1,7 @@
 # Constants
 
-PROJECT_NAME = 'go-backend-template'
-DB_URL = 'postgres://go-backend-template:go-backend-template@localhost:5454/go-backend-template?sslmode=disable'
+PROJECT_NAME = 'fibo'
+DB_URL = 'postgresql://localhost:5432/fibo?sslmode=disable'
 
 ifeq ($(OS),Windows_NT) 
     DETECTED_OS := Windows

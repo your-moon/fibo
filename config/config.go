@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"time"
 
-	"go-backend-template/api/http"
-	"go-backend-template/internal/auth"
-	"go-backend-template/internal/base/database"
-
 	"github.com/kelseyhightower/envconfig"
 	"github.com/subosito/gotenv"
+
+	"fibo/api/http"
+	"fibo/internal/auth"
+	"fibo/internal/base/database"
 )
 
 // Config
@@ -38,6 +38,7 @@ func ParseEnv(envPath string) (*Config, error) {
 		return nil, err
 	}
 
+	fmt.Println(config)
 	return &config, nil
 }
 

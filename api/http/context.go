@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"go-backend-template/internal/base/request"
+	"fibo/internal/base/request"
 )
 
 type reqInfoKeyType = string

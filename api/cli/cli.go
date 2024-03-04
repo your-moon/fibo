@@ -2,7 +2,8 @@ package cli
 
 import (
 	"github.com/alecthomas/kong"
-	"go-backend-template/config"
+
+	"fibo/config"
 )
 
 // Scheme

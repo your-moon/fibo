@@ -1,4 +1,4 @@
-module go-backend-template
+module fibo
 
 go 1.17
 

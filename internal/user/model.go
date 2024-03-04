@@ -4,8 +4,8 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/go-ozzo/ozzo-validation/is"
 
-	"go-backend-template/internal/base/crypto"
-	"go-backend-template/internal/base/errors"
+	"fibo/internal/base/crypto"
+	"fibo/internal/base/errors"
 )
 
 type UserModel struct {

@@ -7,7 +7,7 @@ import (
 	"github.com/jackc/pgconn"
 	"github.com/jackc/pgx/v4"
 
-	"go-backend-template/internal/base/errors"
+	"fibo/internal/base/errors"
 )
 
 type ConnManager interface {

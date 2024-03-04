@@ -7,10 +7,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"go-backend-template/internal/auth"
-	"go-backend-template/internal/base/errors"
-	"go-backend-template/internal/base/request"
-	"go-backend-template/internal/user"
+	"fibo/internal/auth"
+	"fibo/internal/base/errors"
+	"fibo/internal/base/request"
+	"fibo/internal/user"
 )
 
 func initRouter(server *Server) {

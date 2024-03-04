@@ -5,9 +5,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"go-backend-template/internal/auth"
-	"go-backend-template/internal/base/crypto"
-	"go-backend-template/internal/user"
+	"fibo/internal/auth"
+	"fibo/internal/base/crypto"
+	"fibo/internal/user"
 )
 
 type Config interface {
