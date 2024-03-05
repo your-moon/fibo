@@ -7,6 +7,7 @@ import (
 
 	"fibo/internal/auth"
 	"fibo/internal/base/crypto"
+	"fibo/internal/post"
 	"fibo/internal/user"
 )
 
@@ -20,6 +21,7 @@ type ServerOpts struct {
 	AuthService  auth.AuthService
 	Crypto       crypto.Crypto
 	Config       Config
+	Post         post.PostUseCase
 }
 
 func NewServer(opts ServerOpts) *Server {
@@ -31,6 +33,7 @@ func NewServer(opts ServerOpts) *Server {
 		crypto:       opts.Crypto,
 		userUsecases: opts.UserUsecases,
 		authService:  opts.AuthService,
+		postUsecases: opts.Post,
 	}
 
 	initRouter(server)
@@ -44,6 +47,7 @@ type Server struct {
 	crypto       crypto.Crypto
 	userUsecases user.UserUsecases
 	authService  auth.AuthService
+	postUsecases post.PostUseCase
 }
 
 func (s Server) Listen() error {

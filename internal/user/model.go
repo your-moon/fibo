@@ -9,11 +9,12 @@ import (
 )
 
 type UserModel struct {
-	Id        int64
-	FirstName string
-	LastName  string
-	Email     string
-	Password  string
+	Id         int64
+	FirstName  string
+	LastName   string
+	Email      string
+	Password   string
+	Reputation int
 }
 
 func NewUser(firstName, lastName, email, password string) (UserModel, error) {

@@ -3,6 +3,7 @@ package http
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -10,6 +11,7 @@ import (
 	"fibo/internal/auth"
 	"fibo/internal/base/errors"
 	"fibo/internal/base/request"
+	"fibo/internal/post"
 	"fibo/internal/user"
 )
 
@@ -26,6 +28,7 @@ type router struct {
 }
 
 func (r *router) init() {
+	r.engine.Use(corsMiddleware())
 	r.engine.Use(r.trace())
 	r.engine.Use(r.recover())
 	r.engine.Use(r.logger())
@@ -36,8 +39,30 @@ func (r *router) init() {
 	r.engine.GET("/users/me", r.authenticate, r.getMe)
 	r.engine.PUT("/users/me", r.authenticate, r.updateMe)
 	r.engine.PATCH("/users/me/password", r.authenticate, r.changeMyPassword)
+	r.engine.POST("/posts", r.authenticate, r.addPost)
+	r.engine.GET("/posts", r.getPosts)
+	r.engine.GET("/posts/:id", r.getPostById)
+	r.engine.PUT("/posts/:id", r.authenticate, r.updatePost)
+	r.engine.GET("/users/me/posts", r.authenticate, r.getMyPosts)
+	r.engine.GET("/posts/published", r.getPublishedPosts)
 
 	r.engine.NoRoute(r.methodNotFound)
+}
+
+func corsMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(http.StatusOK)
+			return
+		}
+
+		c.Next()
+	}
 }
 
 func (r *router) login(c *gin.Context) {
@@ -138,6 +163,101 @@ func (r *router) getMe(c *gin.Context) {
 	okResponse(user).reply(c)
 }
 
+func (r *router) getPostById(c *gin.Context) {
+	postId, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		errorResponse(err, nil, r.config.DetailedError()).reply(c)
+		return
+	}
+
+	post, err := r.postUsecases.GetPostById(c, postId)
+	if err != nil {
+		errorResponse(err, nil, r.config.DetailedError()).reply(c)
+		return
+	}
+
+	okResponse(post).reply(c)
+}
+
+func (r *router) getMyPosts(c *gin.Context) {
+	reqInfo := getReqInfo(c)
+
+	posts, err := r.postUsecases.GetMyPosts(c, reqInfo.UserId)
+	if err != nil {
+		errorResponse(err, nil, r.config.DetailedError()).reply(c)
+		return
+	}
+
+	okResponse(posts).reply(c)
+}
+
+func (r *router) updatePost(c *gin.Context) {
+	var updatePostDto post.UpdatePostDto
+
+	postId, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		errorResponse(err, nil, r.config.DetailedError()).reply(c)
+		return
+	}
+
+	updatePostDto.Id = postId
+
+	if err := bindBody(&updatePostDto, c); err != nil {
+		errorResponse(err, nil, r.config.DetailedError()).reply(c)
+		return
+	}
+
+	err = r.postUsecases.UpdatePost(c, updatePostDto)
+	if err != nil {
+		errorResponse(err, nil, r.config.DetailedError()).reply(c)
+		return
+	}
+
+	okResponse(nil).reply(c)
+}
+
+func (r *router) addPost(c *gin.Context) {
+	var addPostDto post.AddPostDto
+
+	if err := bindBody(&addPostDto, c); err != nil {
+		errorResponse(err, nil, r.config.DetailedError()).reply(c)
+		return
+	}
+	reqInfo := getReqInfo(c)
+	addPostDto.UserId = reqInfo.UserId
+	fmt.Println(addPostDto)
+
+	postId, err := r.postUsecases.AddPost(c, addPostDto)
+	if err != nil {
+		errorResponse(err, nil, r.config.DetailedError()).reply(c)
+		return
+
+	}
+	fmt.Println(postId)
+	//
+	okResponse(postId).reply(c)
+}
+
+func (r *router) getPublishedPosts(c *gin.Context) {
+	posts, err := r.postUsecases.GetPublishedPosts(c)
+	if err != nil {
+		errorResponse(err, nil, r.config.DetailedError()).reply(c)
+		return
+	}
+
+	okResponse(posts).reply(c)
+}
+
+func (r *router) getPosts(c *gin.Context) {
+	posts, err := r.postUsecases.GetPosts(c)
+	if err != nil {
+		errorResponse(err, nil, r.config.DetailedError()).reply(c)
+		return
+	}
+
+	okResponse(posts).reply(c)
+}
+
 func (r *router) methodNotFound(c *gin.Context) {
 	err := errors.New(errors.NotFoundError, "method not found")
 	errorResponse(err, nil, r.config.DetailedError()).reply(c)
@@ -170,7 +290,8 @@ func (r *router) logger() gin.HandlerFunc {
 			parsedReqInfo = reqInfo.(request.RequestInfo)
 		}
 
-		return fmt.Sprintf("%s - [HTTP] TraceId: %s; UserId: %d; Method: %s; Path: %s; Status: %d, Latency: %s;\n\n",
+		return fmt.Sprintf(
+			"%s - [HTTP] TraceId: %s; UserId: %d; Method: %s; Path: %s; Status: %d, Latency: %s;\n\n",
 			param.TimeStamp.Format(time.RFC1123),
 			parsedReqInfo.TraceId,
 			parsedReqInfo.UserId,
@@ -184,7 +305,6 @@ func (r *router) logger() gin.HandlerFunc {
 
 func bindBody(payload interface{}, c *gin.Context) error {
 	err := c.BindJSON(payload)
-
 	if err != nil {
 		return errors.New(errors.BadRequestError, err.Error())
 	}

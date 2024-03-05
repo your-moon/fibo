@@ -6,10 +6,9 @@ import (
 	"github.com/jackc/pgconn"
 	"github.com/jackc/pgerrcode"
 
+	databaseImpl "fibo/internal/base/database/impl"
 	"fibo/internal/base/errors"
 	"fibo/internal/user"
-
-	databaseImpl "fibo/internal/base/database/impl"
 )
 
 type UserRepositoryOpts struct {
@@ -37,7 +36,6 @@ func (r *userRepository) Add(ctx context.Context, model user.UserModel) (int64, 
 		}).
 		Returning("user_id").
 		ToSQL()
-
 	if err != nil {
 		return 0, errors.Wrap(err, errors.DatabaseError, "syntax error")
 	}
@@ -63,7 +61,6 @@ func (r *userRepository) Update(ctx context.Context, model user.UserModel) (int6
 		Where(databaseImpl.Ex{"user_id": model.Id}).
 		Returning("user_id").
 		ToSQL()
-
 	if err != nil {
 		return 0, errors.Wrap(err, errors.DatabaseError, "syntax error")
 	}
@@ -88,7 +85,6 @@ func (r *userRepository) GetById(ctx context.Context, userId int64) (user.UserMo
 		From("users").
 		Where(databaseImpl.Ex{"user_id": userId}).
 		ToSQL()
-
 	if err != nil {
 		return user.UserModel{}, errors.Wrap(err, errors.DatabaseError, "syntax error")
 	}
@@ -121,7 +117,6 @@ func (r *userRepository) GetByEmail(ctx context.Context, email string) (user.Use
 		From("users").
 		Where(databaseImpl.Ex{"email": email}).
 		ToSQL()
-
 	if err != nil {
 		return user.UserModel{}, errors.Wrap(err, errors.DatabaseError, "syntax error")
 	}
@@ -149,7 +144,12 @@ func parseAddUserError(user *user.UserModel, err error) error {
 	if isPgError && pgError.Code == pgerrcode.UniqueViolation {
 		switch pgError.ConstraintName {
 		case "users_email_key":
-			return errors.Wrapf(err, errors.AlreadyExistsError, "user with email \"%s\" already exists", user.Email)
+			return errors.Wrapf(
+				err,
+				errors.AlreadyExistsError,
+				"user with email \"%s\" already exists",
+				user.Email,
+			)
 		default:
 			return errors.Wrapf(err, errors.DatabaseError, "add user failed")
 		}
@@ -162,7 +162,12 @@ func parseUpdateUserError(user *user.UserModel, err error) error {
 	pgError, isPgError := err.(*pgconn.PgError)
 
 	if isPgError && pgError.Code == pgerrcode.UniqueViolation {
-		return errors.Wrapf(err, errors.AlreadyExistsError, "user with email \"%s\" already exists", user.Email)
+		return errors.Wrapf(
+			err,
+			errors.AlreadyExistsError,
+			"user with email \"%s\" already exists",
+			user.Email,
+		)
 	}
 
 	return errors.Wrapf(err, errors.DatabaseError, "update user failed")
