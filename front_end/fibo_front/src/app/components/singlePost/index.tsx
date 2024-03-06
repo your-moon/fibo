@@ -58,10 +58,8 @@ export const SinglePost = ({ id, likes, title, content }: SinglePostProps) => {
           <HeartIcon filled={isLiked} />
         </Button>
       </CardHeader>
-      <CardBody className="px-3 py-0 text-small text-default-400">
-        <p>
-          <PostContent content={content} />
-        </p>
+      <CardBody className="px-4 py-0 text-small text-default-400">
+        <PostContent content={content} />
       </CardBody>
       <CardFooter className="gap-3">
         <div className="flex gap-1">

@@ -40,6 +40,8 @@ function Dashboard() {
     }
   });
 
+  if (isPending) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
   if (!token) {
     return (
       <div className="text-center mt-20">
@@ -48,8 +50,7 @@ function Dashboard() {
     );
   }
 
-  if (isPending) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  if (!data.data) return <div>No data</div>;
 
   return (
     <div className="mx-80 mt-12">

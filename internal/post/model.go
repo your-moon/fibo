@@ -11,7 +11,7 @@ type PostModel struct {
 	UserId      int64
 	Title       string
 	Content     string
-	Likes       int
+	Likes       int64
 	IsPublished bool
 	CreatedAt   string
 	UpdatedAt   string
@@ -33,7 +33,7 @@ func NewPost(userId int64, title string, content string, isPublished bool) (Post
 	return post, nil
 }
 
-func (post *PostModel) Update(title string, content string, isPublished bool) error {
+func (post *PostModel) Update(title string, content string, isPublished bool, likes int64) error {
 	if len(title) > 0 {
 		post.Title = title
 	}
@@ -43,6 +43,10 @@ func (post *PostModel) Update(title string, content string, isPublished bool) er
 	}
 
 	post.IsPublished = isPublished
+
+	if likes > 0 {
+		post.Likes = likes
+	}
 
 	if err := post.Validate(); err != nil {
 		return err

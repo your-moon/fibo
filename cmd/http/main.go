@@ -17,7 +17,7 @@ import (
 func main() {
 	ctx := context.Background()
 	parser := cli.NewParser()
-	//
+
 	conf, err := parser.ParseConfig()
 	if err != nil {
 		log.Fatal(err)

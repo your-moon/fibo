@@ -1,11 +1,11 @@
-version: '3.8'
+version: "3.8"
 
 services:
   postgres:
     image: postgres:14-alpine
     container_name: fibo-postgres
     ports:
-      - '5454:5432'
+      - "5454:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
@@ -14,11 +14,45 @@ services:
       - POSTGRES_DB=fibo
     networks:
       - network
+  migrate:
+    image: migrate/migrate
+    networks:
+      - network
+    volumes:
+      - ./migrations:/migrations
+    command:
+      [
+        "-database",
+        "postgres://fibo:fibo@postgres:5432/fibo?sslmode=disable",
+        "-path",
+        "/migrations",
+        "up",
+      ]
+
+    links:
+      - postgres
+    depends_on:
+      - postgres
+  app:
+    build: .
+    ports:
+      - "3005:3005"
+    environment:
+      - HTTP_HOST=0.0.0.0
+      - HTTP_PORT=3005
+      - HTTP_DETAILED_ERROR=false
+      - DATABASE_URL=postgresql://fibo:fibo@postgres:5432/fibo
+      - ACCESS_TOKEN_EXPIRES_TTL=180
+      - ACCESS_TOKEN_SECRET=secret
+    depends_on:
+      - postgres
+    networks:
+      - network
 
 volumes:
   postgres_data:
-    name: 'fibo-postgres-data'
+    name: "fibo-postgres-data"
 
 networks:
   network:
-    name: 'fibo-network'
+    name: "fibo-network"

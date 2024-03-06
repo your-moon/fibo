@@ -36,7 +36,7 @@ export default function Navbar() {
           </NavbarItem>
           <NavbarItem>
             <Link color="foreground" href="/dashboard" aria-current="page">
-              Dashboard
+              BackOffice
             </Link>
           </NavbarItem>
           <NavbarItem>
@@ -80,7 +80,7 @@ export default function Navbar() {
         </NavbarItem>
         <NavbarItem isActive>
           <Link href="/dashboard" aria-current="page">
-            Dashboard
+            BackOffice
           </Link>
         </NavbarItem>
       </NavbarContent>

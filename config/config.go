@@ -38,7 +38,7 @@ func ParseEnv(envPath string) (*Config, error) {
 		return nil, err
 	}
 
-	fmt.Println(config)
+	// fmt.Println(config)
 	return &config, nil
 }
 

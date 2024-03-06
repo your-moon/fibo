@@ -35,7 +35,7 @@ func (p *postRepository) Update(
 ) (int64, error) {
 	sql, _, err := databaseImpl.QueryBuilder.
 		Update("posts").
-		Set(goqu.Record{"title": post.Title, "content": post.Content, "is_published": post.IsPublished}).
+		Set(goqu.Record{"title": post.Title, "content": post.Content, "is_published": post.IsPublished, "likes": post.Likes}).
 		Where(goqu.Ex{"id": post.Id}).
 		ToSQL()
 	fmt.Println(sql)
@@ -90,7 +90,7 @@ func (r *postRepository) GetById(ctx context.Context, postId int64) (post.PostMo
 	var createdAt time.Time
 	var updatedAt time.Time
 	var deletedAt sqlS.NullTime
-	if err := row.Scan(&p.Id, &p.UserId, &p.Title, &p.Content, &p.IsPublished, &createdAt, &updatedAt, &deletedAt); err != nil {
+	if err := row.Scan(&p.Id, &p.UserId, &p.Title, &p.Content, &p.IsPublished, &p.Likes, &createdAt, &updatedAt, &deletedAt); err != nil {
 		return post.PostModel{}, errors.Wrap(err, errors.DatabaseError, "scan post failed")
 	}
 	p.CreatedAt = createdAt.Format(time.RFC3339)
@@ -125,7 +125,7 @@ func (r *postRepository) GetPublishedPosts(ctx context.Context) ([]post.PostMode
 		var createdAt time.Time
 		var updatedAt time.Time
 		var deletedAt sqlS.NullTime
-		if err := rows.Scan(&p.Id, &p.UserId, &p.Title, &p.Content, &p.IsPublished, &createdAt, &updatedAt, &deletedAt); err != nil {
+		if err := rows.Scan(&p.Id, &p.UserId, &p.Title, &p.Content, &p.IsPublished, &p.Likes, &createdAt, &updatedAt, &deletedAt); err != nil {
 			return nil, errors.Wrap(err, errors.DatabaseError, "scan post failed")
 		}
 		p.CreatedAt = createdAt.Format(time.RFC3339)
@@ -162,7 +162,7 @@ func (r *postRepository) GetMyPosts(ctx context.Context, userId int64) ([]post.P
 		var createdAt time.Time
 		var updatedAt time.Time
 		var deletedAt sqlS.NullTime
-		if err := rows.Scan(&p.Id, &p.UserId, &p.Title, &p.Content, &p.IsPublished, &createdAt, &updatedAt, &deletedAt); err != nil {
+		if err := rows.Scan(&p.Id, &p.UserId, &p.Title, &p.Content, &p.IsPublished, &p.Likes, &createdAt, &updatedAt, &deletedAt); err != nil {
 			return nil, errors.Wrap(err, errors.DatabaseError, "scan post failed")
 		}
 		p.CreatedAt = createdAt.Format(time.RFC3339)
@@ -200,7 +200,7 @@ func (r *postRepository) GetPosts(
 		var createdAt time.Time
 		var updatedAt time.Time
 		var deletedAt sqlS.NullTime
-		if err := rows.Scan(&p.Id, &p.UserId, &p.Title, &p.Content, &p.IsPublished, &createdAt, &updatedAt, &deletedAt); err != nil {
+		if err := rows.Scan(&p.Id, &p.UserId, &p.Title, &p.Content, &p.IsPublished, &p.Likes, &createdAt, &updatedAt, &deletedAt); err != nil {
 			fmt.Println(err)
 			return nil, errors.Wrap(err, errors.DatabaseError, "scan post failed")
 		}

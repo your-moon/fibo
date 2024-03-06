@@ -8,6 +8,7 @@ type PostDto struct {
 	IsPublished bool   `json:"is_published"`
 	CreatedAt   string `json:"createdAt"`
 	UpdatedAt   string `json:"updatedAt"`
+	Likes       int64  `json:"likes"`
 }
 
 type AddPostDto struct {
@@ -26,6 +27,7 @@ type UpdatePostDto struct {
 	Title       string `json:"title"`
 	Content     string `json:"content"`
 	IsPublished bool   `json:"is_published"`
+	Likes       int64  `json:"likes"`
 }
 
 func (p UpdatePostDto) MapToModel() PostModel {
@@ -34,5 +36,6 @@ func (p UpdatePostDto) MapToModel() PostModel {
 		Title:       p.Title,
 		Content:     p.Content,
 		IsPublished: p.IsPublished,
+		Likes:       p.Likes,
 	}
 }

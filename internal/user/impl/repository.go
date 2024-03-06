@@ -2,6 +2,7 @@ package impl
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/jackc/pgconn"
 	"github.com/jackc/pgerrcode"
@@ -26,13 +27,15 @@ type userRepository struct {
 }
 
 func (r *userRepository) Add(ctx context.Context, model user.UserModel) (int64, error) {
+	fmt.Printf("Add user: %+v\n", model)
 	sql, _, err := databaseImpl.QueryBuilder.
 		Insert("users").
 		Rows(databaseImpl.Record{
-			"firstname": model.FirstName,
-			"lastname":  model.LastName,
-			"email":     model.Email,
-			"password":  model.Password,
+			"firstname":  model.FirstName,
+			"lastname":   model.LastName,
+			"email":      model.Email,
+			"password":   model.Password,
+			"reputation": model.Reputation,
 		}).
 		Returning("user_id").
 		ToSQL()
@@ -53,10 +56,11 @@ func (r *userRepository) Update(ctx context.Context, model user.UserModel) (int6
 	sql, _, err := databaseImpl.QueryBuilder.
 		Update("users").
 		Set(databaseImpl.Record{
-			"firstname": model.FirstName,
-			"lastname":  model.LastName,
-			"email":     model.Email,
-			"password":  model.Password,
+			"firstname":  model.FirstName,
+			"lastname":   model.LastName,
+			"email":      model.Email,
+			"password":   model.Password,
+			"reputation": model.Reputation,
 		}).
 		Where(databaseImpl.Ex{"user_id": model.Id}).
 		Returning("user_id").
@@ -81,6 +85,7 @@ func (r *userRepository) GetById(ctx context.Context, userId int64) (user.UserMo
 			"lastname",
 			"email",
 			"password",
+			"reputation",
 		).
 		From("users").
 		Where(databaseImpl.Ex{"user_id": userId}).
@@ -98,6 +103,7 @@ func (r *userRepository) GetById(ctx context.Context, userId int64) (user.UserMo
 		&model.LastName,
 		&model.Email,
 		&model.Password,
+		&model.Reputation,
 	)
 	if err != nil {
 		return user.UserModel{}, parseGetUserByIdError(userId, err)
@@ -113,6 +119,7 @@ func (r *userRepository) GetByEmail(ctx context.Context, email string) (user.Use
 			"firstname",
 			"lastname",
 			"password",
+			"reputation",
 		).
 		From("users").
 		Where(databaseImpl.Ex{"email": email}).
@@ -130,6 +137,7 @@ func (r *userRepository) GetByEmail(ctx context.Context, email string) (user.Use
 		&model.FirstName,
 		&model.LastName,
 		&model.Password,
+		&model.Reputation,
 	)
 	if err != nil {
 		return user.UserModel{}, parseGetUserByEmailError(email, err)

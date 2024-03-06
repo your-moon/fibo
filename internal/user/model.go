@@ -14,15 +14,16 @@ type UserModel struct {
 	LastName   string
 	Email      string
 	Password   string
-	Reputation int
+	Reputation int64
 }
 
-func NewUser(firstName, lastName, email, password string) (UserModel, error) {
+func NewUser(firstName, lastName, email, password string, reputation int64) (UserModel, error) {
 	user := UserModel{
-		FirstName: firstName,
-		LastName:  lastName,
-		Email:     email,
-		Password:  password,
+		FirstName:  firstName,
+		LastName:   lastName,
+		Email:      email,
+		Password:   password,
+		Reputation: reputation,
 	}
 	if err := user.Validate(); err != nil {
 		return UserModel{}, err

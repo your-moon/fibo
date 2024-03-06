@@ -5,13 +5,15 @@ const edjsParser = edjsHTML();
 
 const PostContent = (props: { content: string }) => {
   const json = JSON.parse(props.content);
-  const html = edjsParser.parse(json);
-  console.log(html);
+  console.log(json);
+  let htmlArray = edjsParser.parse(json);
+  console.log(htmlArray);
   return (
-    <div
-      className={styles.postContent}
-      dangerouslySetInnerHTML={{ __html: html }}
-    />
+    <div>
+      {htmlArray.map((html, index) => (
+        <div key={index} dangerouslySetInnerHTML={{ __html: html }} />
+      ))}
+    </div>
   );
 };
 

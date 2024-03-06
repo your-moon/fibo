@@ -91,6 +91,11 @@ docker-up:
 docker-down:
 	@docker-compose down
 
+.SILENT: build-run
+build-run:
+	@make build-http
+	@ ./bin/http-server
+
 # Format
 
 .SILENT: fmt

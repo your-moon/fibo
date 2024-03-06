@@ -24,7 +24,7 @@ export default function Posts() {
   const { isPending, error, data } = useQuery({
     queryKey: ["repoData"],
     queryFn: () =>
-      fetch("http://localhost:3005/posts/published").then(
+      fetch("http://localhost:3005/posts/published", {}).then(
         (res) => res.json() as Promise<PostResponse>,
       ),
   });
@@ -32,7 +32,7 @@ export default function Posts() {
 
   if (error) return "An error has occurred: " + error.message;
 
-  if (!data) return "No data";
+  if (!data.data) return "No data";
 
   return (
     <div className="flex flex-row flex-wrap">

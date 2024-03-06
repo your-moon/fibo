@@ -1,10 +1,11 @@
 package user
 
 type UserDto struct {
-	Id        int64  `json:"id"`
-	FirstName string `json:"firstName"`
-	LastName  string `json:"lastName"`
-	Email     string `json:"email"`
+	Id         int64  `json:"id"`
+	FirstName  string `json:"firstName"`
+	LastName   string `json:"lastName"`
+	Email      string `json:"email"`
+	Reputation int64  `json:"reputation"`
 }
 
 func (dto UserDto) MapFromModel(user UserModel) UserDto {
@@ -12,15 +13,17 @@ func (dto UserDto) MapFromModel(user UserModel) UserDto {
 	dto.FirstName = user.FirstName
 	dto.LastName = user.LastName
 	dto.Email = user.Email
+	dto.Reputation = user.Reputation
 
 	return dto
 }
 
 type AddUserDto struct {
-	FirstName string `json:"firstName"`
-	LastName  string `json:"lastName"`
-	Email     string `json:"email"`
-	Password  string `json:"password"`
+	FirstName  string `json:"firstName"`
+	LastName   string `json:"lastName"`
+	Email      string `json:"email"`
+	Password   string `json:"password"`
+	Reputation int64  `json:"reputation"`
 }
 
 func (dto AddUserDto) MapToModel() (UserModel, error) {
@@ -29,6 +32,7 @@ func (dto AddUserDto) MapToModel() (UserModel, error) {
 		dto.LastName,
 		dto.Email,
 		dto.Password,
+		dto.Reputation,
 	)
 }
 

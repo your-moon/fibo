@@ -90,9 +90,9 @@ function EditSinglePost({ params }: { params: { id: number } }) {
         onChange={setContent}
         editorBlock="editorjs"
       />
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center mt-4">
         <Checkbox
-          className="mb-2"
+          className="mb-4"
           isSelected={isPublished}
           onValueChange={setIsPublished}
         >

@@ -70,8 +70,7 @@ func (p *postUseCase) UpdatePost(
 		return err
 	}
 
-	err = model.Update(post.Title, post.Content, post.IsPublished)
-	fmt.Println(model)
+	err = model.Update(post.Title, post.Content, post.IsPublished, post.Likes)
 	if err != nil {
 		return err
 	}

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { newPost } from "./data";
-import { Button, Checkbox } from "@nextui-org/react";
+import { Button, Checkbox, cn } from "@nextui-org/react";
 import Editor from "@/app/components/editor";
 import Cookie from "js-cookie";
 import { useRouter } from "next/navigation";
@@ -40,16 +40,25 @@ export default function Write() {
       <div id="editorjs"></div>
       <Editor data={data} onChange={setData} editorBlock="editorjs-container" />
       <div id="editorjs-container"></div>
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center my-4">
         <Checkbox
-          className="mb-2"
+          classNames={{
+            base: cn(
+              "inline-flex max-w-[250px] min-w-[200px] my-2 bg-content1",
+              "hover:bg-content2 items-center justify-start",
+              "cursor-pointer rounded-lg gap-2 p-4 border-2 border-transparent bg-stone-100",
+              "data-[selected=true]:border-primary",
+            ),
+            label: "w-full",
+          }}
           isSelected={isPublished}
           onValueChange={setIsPublished}
         >
-          Publish
+          {" "}
+          Publish{" "}
         </Checkbox>
         <Button
-          className="max-w-[250px] min-w-[200px]"
+          className="max-w-[250px] min-w-[200px] mt-2"
           color={isSaving ? "success" : "default"}
           onClick={bOnClick}
         >
