@@ -12,6 +12,7 @@ export default function MyPublishedPosts({ data }: MyPublishedPostsProps) {
         .filter((posts) => posts.IsPublished)
         .map((post: RPost) => (
           <EditSinglePost
+            key={post.Id}
             id={post.Id}
             likes={post.Likes}
             title={post.Title}

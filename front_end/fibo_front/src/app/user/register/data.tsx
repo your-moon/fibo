@@ -1,3 +1,4 @@
+import { BACKEND_URL } from "@/app/provider";
 import { Register } from "./page";
 
 export interface RegisterResponseSuccess {
@@ -14,7 +15,7 @@ export interface RegisterResponseError {
 export type RegisterResponse = RegisterResponseSuccess | RegisterResponseError;
 
 export async function fiboRegister(login: Register): Promise<RegisterResponse> {
-  const res = await fetch("http://localhost:3005/users", {
+  const res = await fetch(`${BACKEND_URL}/users`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

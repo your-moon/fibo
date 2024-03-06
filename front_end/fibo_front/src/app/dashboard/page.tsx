@@ -10,6 +10,8 @@ import { Reputation } from "../components/reputation";
 import { PostResponse } from "../components/posts";
 import { useEffect } from "react";
 import Cookie from "js-cookie";
+import { BACKEND_URL } from "../provider";
+import Loading from "../components/loader";
 
 const queryClient = new QueryClient();
 export default function Page() {
@@ -25,7 +27,7 @@ function Dashboard() {
   const { isPending, error, data } = useQuery({
     queryKey: ["user"],
     queryFn: () =>
-      fetch("http://localhost:3005/users/me/posts", {
+      fetch(`${BACKEND_URL}/users/me/posts`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -40,7 +42,7 @@ function Dashboard() {
     }
   });
 
-  if (isPending) return <div>Loading...</div>;
+  if (isPending) return <Loading />;
   if (error) return <div>Error: {error.message}</div>;
   if (!token) {
     return (

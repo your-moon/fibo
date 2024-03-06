@@ -18,7 +18,7 @@ export default function Navbar() {
     if (Cookie.get("token")) {
       setIsLogged(true);
     }
-  });
+  }, []);
 
   if (isLogged) {
     return (
@@ -81,6 +81,11 @@ export default function Navbar() {
         <NavbarItem isActive>
           <Link href="/dashboard" aria-current="page">
             BackOffice
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link color="foreground" href="/user/write">
+            Write
           </Link>
         </NavbarItem>
       </NavbarContent>

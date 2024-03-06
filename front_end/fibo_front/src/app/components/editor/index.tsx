@@ -1,15 +1,11 @@
 "use client";
 
+
 import EditorJS from "@editorjs/editorjs";
 import Header from "@editorjs/header";
-import React, { memo, useEffect } from "react";
+import React, { useEffect } from "react";
 import { EDITOR_JS_TOOLS } from "./tools";
 
-const editor = new EditorJS({
-  tools: {
-    header: Header,
-  },
-});
 interface EditorProps {
   data: any;
   onChange: (data: any) => void;
@@ -18,6 +14,7 @@ interface EditorProps {
 
 const Editor = ({ data, onChange, editorBlock }: EditorProps) => {
   let ref = React.useRef<EditorJS | null>(null);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const initEditor = () => {
     if (!ref.current) {
       const editor = new EditorJS({
@@ -25,7 +22,7 @@ const Editor = ({ data, onChange, editorBlock }: EditorProps) => {
         holder: editorBlock,
         tools: EDITOR_JS_TOOLS,
         data: data,
-        async onChange(api, event) {
+        async onChange(api, _event) {
           const data = await api.saver.save();
           onChange(data);
         },
@@ -45,6 +42,7 @@ const Editor = ({ data, onChange, editorBlock }: EditorProps) => {
         ref.current.destroy();
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

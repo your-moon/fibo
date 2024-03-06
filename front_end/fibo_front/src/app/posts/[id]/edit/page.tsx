@@ -1,8 +1,9 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Editor from "@/app/components/editor";
 import { RPost } from "@/app/components/posts";
-import { Button, Checkbox } from "@nextui-org/react";
+import { Button, Checkbox, cn } from "@nextui-org/react";
 import {
   QueryClient,
   QueryClientProvider,
@@ -11,6 +12,11 @@ import {
 import { useEffect, useState } from "react";
 import Cookie from "js-cookie";
 import { useRouter } from "next/navigation";
+import { BACKEND_URL } from "@/app/provider";
+
+const DynamicEditor = dynamic(() => import("@/app/components/editor"), {
+  ssr: false,
+});
 
 interface SinglePostResponse {
   status: number;
@@ -34,7 +40,7 @@ function EditSinglePost({ params }: { params: { id: number } }) {
   const { isPending, error, data } = useQuery({
     queryKey: ["post", params.id],
     queryFn: () =>
-      fetch(`http://localhost:3005/posts/${params.id}`).then((res) => {
+      fetch(`${BACKEND_URL}/posts/${params.id}`).then((res) => {
         return res.json() as Promise<SinglePostResponse>;
       }),
   });
@@ -54,7 +60,7 @@ function EditSinglePost({ params }: { params: { id: number } }) {
     }
     if (!data) return;
 
-    const res = await fetch(`http://localhost:3005/posts/${params.id}`, {
+    const res = await fetch(`${BACKEND_URL}/posts/${params.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -85,21 +91,29 @@ function EditSinglePost({ params }: { params: { id: number } }) {
   return (
     <div className="mx-96 mt-20">
       <div id="editorjs"></div>
-      <Editor
+      <DynamicEditor
         data={JSON.parse(data.data.Content)}
         onChange={setContent}
         editorBlock="editorjs"
       />
-      <div className="flex flex-col items-center justify-center mt-4">
+      <div className="flex flex-col items-center justify-center my-4">
         <Checkbox
-          className="mb-4"
+          classNames={{
+            base: cn(
+              "inline-flex max-w-[250px] min-w-[200px] my-2 bg-content1",
+              "hover:bg-content2 items-center justify-start",
+              "cursor-pointer rounded-lg gap-2 p-4 border-2 border-transparent bg-stone-100",
+              "data-[selected=true]:border-primary",
+            ),
+            label: "w-full",
+          }}
           isSelected={isPublished}
           onValueChange={setIsPublished}
         >
           Publish
         </Checkbox>
         <Button
-          className="max-w-[250px] min-w-[200px]"
+          className="max-w-[250px] min-w-[200px] mt-2"
           color={isSaving ? "success" : "default"}
           onClick={bOnClick}
         >

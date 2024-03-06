@@ -1,7 +1,9 @@
 "use client";
 
+import Loading from "@/app/components/loader";
 import PostContent from "@/app/components/postcontent";
 import { RPost } from "@/app/components/posts";
+import { BACKEND_URL } from "@/app/provider";
 import {
   QueryClient,
   QueryClientProvider,
@@ -26,12 +28,12 @@ function SinglePostPage({ params }: { params: { id: number } }) {
   const { isPending, error, data } = useQuery({
     queryKey: ["post", params.id],
     queryFn: () =>
-      fetch(`http://localhost:3005/posts/${params.id}`).then(
+      fetch(`${BACKEND_URL}/posts/${params.id}`).then(
         (res) => res.json() as Promise<SinglePostResponse>,
       ),
   });
 
-  if (isPending) return <p>Loading...</p>;
+  if (isPending) return <Loading />;
 
   if (error) return <p>Error: {error.message}</p>;
 

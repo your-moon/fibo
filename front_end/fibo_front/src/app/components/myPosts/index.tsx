@@ -12,6 +12,7 @@ export default function Draft({ data }: DraftProps) {
         .filter((post) => !post.IsPublished)
         .map((post: RPost) => (
           <EditSinglePost
+            key={post.Id} // Add key prop with a unique value
             id={post.Id}
             likes={post.Likes}
             title={post.Title}

@@ -1,3 +1,4 @@
+import { BACKEND_URL } from "@/app/provider";
 import { Login } from "./page";
 
 export interface LoginResponseSuccess {
@@ -21,7 +22,7 @@ export interface LoginResponseError {
 export type LoginResponse = LoginResponseSuccess | LoginResponseError;
 
 export async function fiboLogin(login: Login): Promise<LoginResponse> {
-  const res = await fetch("http://localhost:3005/login", {
+  const res = await fetch(`${BACKEND_URL}/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

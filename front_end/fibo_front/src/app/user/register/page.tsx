@@ -31,7 +31,7 @@ export default function Login() {
     console.log(res);
     if (res.status === 200) {
       const data = res as RegisterResponseSuccess;
-      router.push("/admin");
+      router.push("/dashboard");
     }
     if (res.status === 409 || res.status === 400) {
       setError(res.message);
