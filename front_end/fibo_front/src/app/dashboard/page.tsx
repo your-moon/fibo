@@ -56,14 +56,14 @@ function Dashboard() {
   if (!data.data) return <div>No data</div>;
 
   return (
-    <div className="mx-80 mt-12">
+    <div className="mx-60 mt-12">
       <div className="flex flex-row ">
         <Reputation />
         <Salary />
       </div>
-      <h1 className="text-3xl font-bold my-3">My Published Posts</h1>
+      <h1 className="text-4xl font-bold my-6">My Published Posts</h1>
       <MyPublishedPosts data={data.data} />
-      <h1 className="text-3xl font-bold my-3">My Drafts</h1>
+      <h1 className="text-4xl font-bold my-6">My Drafts</h1>
       <Draft data={data.data} />
     </div>
   );

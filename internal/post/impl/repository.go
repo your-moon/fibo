@@ -108,9 +108,11 @@ func (r *postRepository) GetById(ctx context.Context, postId int64) (post.PostMo
 	return p, nil
 }
 
-func (r *postRepository) GetPublishedPosts(ctx context.Context) ([]post.PostModel, error) {
+func (r *postRepository) GetPublishedPosts(ctx context.Context) ([]post.PostModelWithUser, error) {
 	sql, _, err := databaseImpl.QueryBuilder.
 		From("posts").
+		Select("posts.id", "posts.user_id", "posts.title", "posts.content", "posts.is_published", "posts.likes", "posts.created_at", "posts.updated_at", "posts.deleted_at", "posts.category_id", "users.email", "users.firstname").
+		InnerJoin(goqu.T("users"), goqu.On(goqu.Ex{"posts.user_id": goqu.I("users.user_id")})).
 		Where(databaseImpl.Ex{"is_published": true}).
 		ToSQL()
 	if err != nil {
@@ -119,23 +121,27 @@ func (r *postRepository) GetPublishedPosts(ctx context.Context) ([]post.PostMode
 
 	rows, err := r.Conn(ctx).Query(ctx, sql)
 	if err != nil {
-		return nil, errors.Wrap(err, errors.DatabaseError, "get posts failed")
+		return nil, errors.Wrap(err, errors.DatabaseError, "get published posts failed")
 	}
 	defer rows.Close()
 
-	var posts []post.PostModel
+	var posts []post.PostModelWithUser
 	for rows.Next() {
-		var p post.PostModel
+		var p post.PostModelWithUser
 		var createdAt time.Time
 		var updatedAt time.Time
 		var deletedAt sqlS.NullTime
 		var category sqlS.NullInt64
-		if err := rows.Scan(&p.Id, &p.UserId, &p.Title, &p.Content, &p.IsPublished, &p.Likes, &createdAt, &updatedAt, &deletedAt, &category); err != nil {
+		var userEmail string
+		var userName string
+		if err := rows.Scan(&p.Id, &p.UserId, &p.Title, &p.Content, &p.IsPublished, &p.Likes, &createdAt, &updatedAt, &deletedAt, &category, &userEmail, &userName); err != nil {
 			return nil, errors.Wrap(err, errors.DatabaseError, "scan post failed")
 		}
 		p.CategoryId = category.Int64
 		p.CreatedAt = createdAt.Format(time.RFC3339)
 		p.UpdatedAt = updatedAt.Format(time.RFC3339)
+		p.UserEmail = userEmail
+		p.UserName = userName
 		if deletedAt.Valid {
 			p.DeletedAt = deletedAt.Time.Format(time.RFC3339)
 		} else {
@@ -147,34 +153,45 @@ func (r *postRepository) GetPublishedPosts(ctx context.Context) ([]post.PostMode
 	return posts, nil
 }
 
-func (r *postRepository) GetMyPosts(ctx context.Context, userId int64) ([]post.PostModel, error) {
+func (r *postRepository) GetMyPosts(
+	ctx context.Context,
+	userId int64,
+) ([]post.PostModelWithUser, error) {
 	sql, _, err := databaseImpl.QueryBuilder.
 		From("posts").
-		Where(databaseImpl.Ex{"user_id": userId}).
+		Select("posts.id", "posts.user_id", "posts.title", "posts.content", "posts.is_published", "posts.likes", "posts.created_at", "posts.updated_at", "posts.deleted_at", "posts.category_id", "users.email", "users.firstname").
+		InnerJoin(goqu.T("users"), goqu.On(goqu.Ex{"posts.user_id": goqu.I("users.user_id")})).
+		Where(databaseImpl.Ex{"posts.user_id": userId}).
 		ToSQL()
+	fmt.Println(sql)
 	if err != nil {
 		return nil, errors.Wrap(err, errors.DatabaseError, "syntax error get posts")
 	}
 
 	rows, err := r.Conn(ctx).Query(ctx, sql)
+	fmt.Println(err)
 	if err != nil {
-		return nil, errors.Wrap(err, errors.DatabaseError, "get posts failed")
+		return nil, errors.Wrap(err, errors.DatabaseError, "get my posts failed")
 	}
 	defer rows.Close()
 
-	var posts []post.PostModel
+	var posts []post.PostModelWithUser
 	for rows.Next() {
-		var p post.PostModel
+		var p post.PostModelWithUser
 		var createdAt time.Time
 		var updatedAt time.Time
 		var deletedAt sqlS.NullTime
 		var category sqlS.NullInt64
-		if err := rows.Scan(&p.Id, &p.UserId, &p.Title, &p.Content, &p.IsPublished, &p.Likes, &createdAt, &updatedAt, &deletedAt, &category); err != nil {
+		var userEmail string
+		var userName string
+		if err := rows.Scan(&p.Id, &p.UserId, &p.Title, &p.Content, &p.IsPublished, &p.Likes, &createdAt, &updatedAt, &deletedAt, &category, &userEmail, &userName); err != nil {
 			return nil, errors.Wrap(err, errors.DatabaseError, "scan post failed")
 		}
 		p.CategoryId = category.Int64
 		p.CreatedAt = createdAt.Format(time.RFC3339)
 		p.UpdatedAt = updatedAt.Format(time.RFC3339)
+		p.UserEmail = userEmail
+		p.UserName = userName
 		if deletedAt.Valid {
 			p.DeletedAt = deletedAt.Time.Format(time.RFC3339)
 		} else {
@@ -188,8 +205,11 @@ func (r *postRepository) GetMyPosts(ctx context.Context, userId int64) ([]post.P
 
 func (r *postRepository) GetPosts(
 	ctx context.Context,
-) ([]post.PostModel, error) {
-	sql, _, err := databaseImpl.QueryBuilder.From("posts").ToSQL()
+) ([]post.PostModelWithUser, error) {
+	sql, _, err := databaseImpl.QueryBuilder.From("posts").
+		Select("posts.id", "posts.user_id", "posts.title", "posts.content", "posts.is_published", "posts.likes", "posts.created_at", "posts.updated_at", "posts.deleted_at", "posts.category_id", "users.email", "users.firstname").
+		InnerJoin(goqu.T("users"), goqu.On(goqu.Ex{"posts.user_id": goqu.I("users.user_id")})).
+		ToSQL()
 	fmt.Println(sql)
 	if err != nil {
 		return nil, errors.Wrap(err, errors.DatabaseError, "syntax error get posts")
@@ -202,20 +222,25 @@ func (r *postRepository) GetPosts(
 
 	defer rows.Close()
 
-	var posts []post.PostModel
+	var posts []post.PostModelWithUser
 	for rows.Next() {
-		var p post.PostModel
+		var p post.PostModelWithUser
 		var createdAt time.Time
 		var updatedAt time.Time
 		var deletedAt sqlS.NullTime
 		var category sqlS.NullInt64
-		if err := rows.Scan(&p.Id, &p.UserId, &p.Title, &p.Content, &p.IsPublished, &p.Likes, &createdAt, &updatedAt, &deletedAt, &category); err != nil {
+		var userEmail string
+		var userName string
+		if err := rows.Scan(&p.Id, &p.UserId, &p.Title, &p.Content, &p.IsPublished, &p.Likes, &createdAt, &updatedAt, &deletedAt, &category, &userEmail, &userName); err != nil {
 			fmt.Println(err)
 			return nil, errors.Wrap(err, errors.DatabaseError, "scan post failed")
 		}
+		fmt.Println(err)
 		p.CategoryId = category.Int64
 		p.CreatedAt = createdAt.Format(time.RFC3339)
 		p.UpdatedAt = updatedAt.Format(time.RFC3339)
+		p.UserEmail = userEmail
+		p.UserName = userName
 		if deletedAt.Valid {
 			p.DeletedAt = deletedAt.Time.Format(time.RFC3339)
 		} else {
@@ -223,8 +248,6 @@ func (r *postRepository) GetPosts(
 		}
 		posts = append(posts, p)
 	}
-
-	fmt.Println(posts)
 
 	return posts, nil
 }

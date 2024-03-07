@@ -23,6 +23,8 @@ export default function Draft({ data }: DraftProps) {
             title={post.Title}
             content={post.Content}
             categoryId={post.CategoryId}
+            userEmail={post.UserEmail}
+            userName={post.UserName}
           />
         ))}
     </div>

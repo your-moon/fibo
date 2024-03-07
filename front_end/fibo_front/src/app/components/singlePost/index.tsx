@@ -7,6 +7,7 @@ import {
   CardFooter,
   CardHeader,
   Link,
+  Spinner,
 } from "@nextui-org/react";
 import React, { useEffect, useState } from "react";
 import { HeartIcon } from "./heartIcon";
@@ -15,6 +16,7 @@ import { BACKEND_URL } from "@/app/provider";
 import Cookie from "js-cookie";
 import { useQuery } from "@tanstack/react-query";
 import { SingleCatResponse } from "../editSinglePost";
+import Loading from "../loader";
 
 interface SinglePostProps {
   id: number;
@@ -23,6 +25,8 @@ interface SinglePostProps {
   content: string;
   isPublished: boolean;
   categoryId: number;
+  userName: string;
+  userEmail: string;
 }
 
 export const SinglePost = ({
@@ -32,10 +36,27 @@ export const SinglePost = ({
   content,
   isPublished,
   categoryId,
+  userName,
+  userEmail,
 }: SinglePostProps) => {
   const [isLiked, setIsLiked] = React.useState(false);
   const [likesCount, setLikesCount] = React.useState(likes);
   const [catName, setCatName] = useState<string>(""); // [1]
+  const {
+    isPending: isPendingUser,
+    error: errorUser,
+    data: dataUser,
+  } = useQuery({
+    queryKey: ["user"],
+    queryFn: () =>
+      fetch(`${BACKEND_URL}/categories/${categoryId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }).then((res) => res.json() as Promise<SingleCatResponse>),
+  });
+
   const { isPending, error, data } = useQuery({
     queryKey: ["cats"],
     queryFn: () =>
@@ -54,7 +75,7 @@ export const SinglePost = ({
     }
   }, [data]);
 
-  if (isPending) return <div>Loading...</div>;
+  if (isPending) return <Spinner color="success" className="mx-5" />;
 
   if (error) return <div>Error: {error.message}</div>;
 
@@ -62,7 +83,7 @@ export const SinglePost = ({
     <Card
       as={Link}
       href={`/posts/${id}`}
-      className="h-48 max-h-80 min-w-[260px] max-w-[300px] mx-1 mb-2"
+      className="max-h-80 min-h-44 min-w-[260px] max-w-[300px] mx-1 mb-2"
     >
       <CardHeader className="justify-between">
         <div className="flex gap-5">
@@ -74,10 +95,10 @@ export const SinglePost = ({
           />
           <div className="flex flex-col gap-1 items-start justify-center">
             <h4 className="w-28 text-small font-semibold leading-none text-default-600 text-ellipsis overflow-hidden ...">
-              {title}
+              {userName}
             </h4>
             <h5 className="text-small tracking-tight text-default-400">
-              @{catName ? catName : ":("}
+              @{userEmail}
             </h5>
           </div>
         </div>
@@ -113,15 +134,20 @@ export const SinglePost = ({
           <HeartIcon filled={isLiked} />
         </Button>
       </CardHeader>
-      <CardBody className="px-4 py-0 text-small text-default-400">
-        <PostContent content={content} />
+      <CardBody className="px-4 py-0 text-3xl max-h-20 text-semibold text-default-600 text-ellipsis overflow-hidden ...">
+        <p>{title}</p>
       </CardBody>
-      <CardFooter className="gap-3">
-        <div className="flex gap-1">
-          <p className="font-semibold text-default-400 text-small">
-            {likesCount}
+      <CardFooter className="gap-3 ">
+        <div className="flex gap-10 w-full">
+          <div className="flex flex-row w-1/2 left-0">
+            <p className="font-semibold text-default-400 text-small mr-1">
+              {likesCount}
+            </p>
+            <p className=" text-default-400 text-small">Likes</p>
+          </div>
+          <p className=" text-default-400 text-small right-0 float-right ">
+            @{catName}
           </p>
-          <p className=" text-default-400 text-small">Likes</p>
         </div>
       </CardFooter>
     </Card>

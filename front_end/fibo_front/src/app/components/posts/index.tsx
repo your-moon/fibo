@@ -16,6 +16,8 @@ export interface RPost {
   created_at: string;
   Updated_at: string;
   Deleted_at: string;
+  UserEmail: string;
+  UserName: string;
 }
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -49,6 +51,8 @@ export default function Posts() {
             content={article.Content}
             isPublished={article.IsPublished}
             categoryId={article.CategoryId}
+            userName={article.UserName}
+            userEmail={article.UserEmail}
           />
         </div>
       ))}

@@ -7,7 +7,7 @@ interface MyPublishedPostsProps {
 
 export default function MyPublishedPosts({ data }: MyPublishedPostsProps) {
   return (
-    <div className="flex flex-row flex-wrap my-5 ">
+    <div className="flex flex-row flex-wrap gap-2 ">
       {data
         .filter((posts) => posts.IsPublished)
         .map((post: RPost) => (
@@ -18,6 +18,8 @@ export default function MyPublishedPosts({ data }: MyPublishedPostsProps) {
             title={post.Title}
             content={post.Content}
             categoryId={post.CategoryId}
+            userEmail={post.UserEmail}
+            userName={post.UserName}
           />
         ))}
     </div>

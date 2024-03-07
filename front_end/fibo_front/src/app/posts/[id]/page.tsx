@@ -39,9 +39,11 @@ function SinglePostPage({ params }: { params: { id: number } }) {
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <div className="mx-96 mt-20 flex flex-col ">
-      <h1 className="mb-12">{data.data.Title}</h1>
-      <PostContent content={data.data.Content} />
+    <div className="mt-20 flex flex-col items-center mx-70">
+      <h1 className="mb-12 min-w-96  ">{data.data.Title}</h1>
+      <div className="min-w-[300px] max-w-screen-lg">
+        <PostContent content={data.data.Content} />
+      </div>
       <div className="flex flex-row-reverse my-20">
         <Button disabled={true}>{data.data.Likes} Likes</Button>
       </div>

@@ -6,6 +6,20 @@ import (
 	"fibo/internal/base/errors"
 )
 
+type PostModelWithUser struct {
+	Id          int64
+	UserId      int64
+	Title       string
+	Content     string
+	CategoryId  int64
+	Likes       int64
+	IsPublished bool
+	CreatedAt   string
+	UpdatedAt   string
+	DeletedAt   string
+	UserEmail   string
+	UserName    string
+}
 type PostModel struct {
 	Id          int64
 	UserId      int64

@@ -8,9 +8,11 @@ import {
   NavbarContent,
   NavbarItem,
   Link,
+  NavbarMenuToggle,
 } from "@nextui-org/react";
 
 export default function Navbar() {
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [active, setActive] = React.useState<number>(0);
   const [isLogged, setIsLogged] = React.useState<boolean>(false);
 
@@ -23,11 +25,17 @@ export default function Navbar() {
   if (isLogged) {
     return (
       <NavbarComponent>
-        <NavbarBrand>
-          <Link href="/">
-            <p className="font-bold text-inherit">FIBO</p>
-          </Link>
-        </NavbarBrand>
+        <NavbarContent>
+          <NavbarMenuToggle
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            className="sm:hidden"
+          />
+          <NavbarBrand>
+            <Link href="/">
+              <p className="font-bold text-inherit">FIBO</p>
+            </Link>
+          </NavbarBrand>
+        </NavbarContent>
         <NavbarContent className="hidden sm:flex gap-4" justify="center">
           <NavbarItem>
             <Link color="foreground" href="/">

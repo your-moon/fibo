@@ -25,7 +25,9 @@ type postUseCase struct {
 	database.TxManager
 }
 
-func (p *postUseCase) GetPublishedPosts(ctx context.Context) (posts []post.PostModel, err error) {
+func (p *postUseCase) GetPublishedPosts(
+	ctx context.Context,
+) (posts []post.PostModelWithUser, err error) {
 	err = p.RunTx(ctx, func(ctx context.Context) error {
 		posts, err = p.PostRepository.GetPublishedPosts(ctx)
 		return err
@@ -36,7 +38,7 @@ func (p *postUseCase) GetPublishedPosts(ctx context.Context) (posts []post.PostM
 func (p *postUseCase) GetMyPosts(
 	ctx context.Context,
 	userId int64,
-) (posts []post.PostModel, err error) {
+) (posts []post.PostModelWithUser, err error) {
 	err = p.RunTx(ctx, func(ctx context.Context) error {
 		posts, err = p.PostRepository.GetMyPosts(ctx, userId)
 		return err
@@ -44,7 +46,7 @@ func (p *postUseCase) GetMyPosts(
 	return posts, err
 }
 
-func (p *postUseCase) GetPosts(ctx context.Context) (posts []post.PostModel, err error) {
+func (p *postUseCase) GetPosts(ctx context.Context) (posts []post.PostModelWithUser, err error) {
 	err = p.RunTx(ctx, func(ctx context.Context) error {
 		posts, err = p.PostRepository.GetPosts(ctx)
 		return err
