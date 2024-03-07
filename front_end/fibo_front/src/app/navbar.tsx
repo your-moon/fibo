@@ -52,6 +52,11 @@ export default function Navbar() {
               Write
             </Link>
           </NavbarItem>
+          <NavbarItem>
+            <Link color="foreground" href="/admin">
+              Admin
+            </Link>
+          </NavbarItem>
         </NavbarContent>
         <NavbarContent justify="end">
           <NavbarItem>

@@ -83,7 +83,7 @@ export const SinglePost = ({
     <Card
       as={Link}
       href={`/posts/${id}`}
-      className="max-h-80 min-h-44 min-w-[260px] max-w-[300px] mx-1 mb-2"
+      className="flex-auto max-h-80 min-h-44 min-w-[320px] max-w-[350px] mx-1 mb-2"
     >
       <CardHeader className="justify-between">
         <div className="flex gap-5">

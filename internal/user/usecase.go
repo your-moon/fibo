@@ -11,4 +11,5 @@ type UserUsecases interface {
 	Update(ctx context.Context, dto UpdateUserDto) error
 	ChangePassword(ctx context.Context, dto ChangeUserPasswordDto) error
 	GetById(ctx context.Context, userId int64) (UserDto, error)
+	GetAllUsers(ctx context.Context) ([]UserDto, error)
 }

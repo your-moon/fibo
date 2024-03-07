@@ -26,6 +26,50 @@ type userRepository struct {
 	databaseImpl.ConnManager
 }
 
+func (r *userRepository) GetAllUsers(ctx context.Context) ([]user.UserModel, error) {
+	sql, _, err := databaseImpl.QueryBuilder.
+		Select(
+			"user_id",
+			"firstname",
+			"lastname",
+			"email",
+			"password",
+			"reputation",
+		).
+		From("users").
+		ToSQL()
+	if err != nil {
+		return nil, errors.Wrap(err, errors.DatabaseError, "syntax error")
+	}
+
+	rows, err := r.Conn(ctx).Query(ctx, sql)
+	if err != nil {
+		return nil, errors.Wrap(err, errors.DatabaseError, "get all users failed")
+	}
+	defer rows.Close()
+
+	var models []user.UserModel
+
+	for rows.Next() {
+		var model user.UserModel
+		err = rows.Scan(
+			&model.Id,
+			&model.FirstName,
+			&model.LastName,
+			&model.Email,
+			&model.Password,
+			&model.Reputation,
+		)
+		if err != nil {
+			return nil, errors.Wrap(err, errors.DatabaseError, "scan user failed")
+		}
+
+		models = append(models, model)
+	}
+
+	return models, nil
+}
+
 func (r *userRepository) Add(ctx context.Context, model user.UserModel) (int64, error) {
 	fmt.Printf("Add user: %+v\n", model)
 	sql, _, err := databaseImpl.QueryBuilder.

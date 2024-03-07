@@ -62,7 +62,7 @@ export const EditSinglePost = ({
     <Card
       as={Link}
       href={`/posts/${id}/edit`}
-      className="max-h-80 min-h-44 min-w-[260px] max-w-[300px] mx-1 mb-2"
+      className=" flex-auto max-h-80 min-h-44 min-w-[220px] max-w-[280px] mx-1 mb-2"
     >
       <CardHeader className="justify-between">
         <div className="flex gap-5">

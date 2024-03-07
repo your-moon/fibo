@@ -11,4 +11,5 @@ type UserRepository interface {
 	Update(ctx context.Context, user UserModel) (int64, error)
 	GetById(ctx context.Context, userId int64) (UserModel, error)
 	GetByEmail(ctx context.Context, email string) (UserModel, error)
+	GetAllUsers(ctx context.Context) ([]UserModel, error)
 }

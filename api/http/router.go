@@ -42,6 +42,7 @@ func (r *router) init() {
 		userRoutes.PUT("/me", r.authenticate, r.updateMe)
 		userRoutes.PATCH("/me/password", r.authenticate, r.changeMyPassword)
 		userRoutes.GET("/me/posts", r.authenticate, r.getMyPosts)
+		userRoutes.GET("/all", r.authenticate, r.getAllUsers)
 	}
 
 	// Post routes
@@ -209,6 +210,16 @@ func (r *router) changeMyPassword(c *gin.Context) {
 	}
 
 	OkResponse(nil).Reply(c)
+}
+
+func (r *router) getAllUsers(c *gin.Context) {
+	users, err := r.userUsecases.GetAllUsers(contextWithReqInfo(c))
+	if err != nil {
+		ErrorResponse(err, nil, r.config.DetailedError()).Reply(c)
+		return
+	}
+
+	OkResponse(users).Reply(c)
 }
 
 func (r *router) getMe(c *gin.Context) {

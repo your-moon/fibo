@@ -28,6 +28,19 @@ type userUsecases struct {
 	crypto.Crypto
 }
 
+func (u *userUsecases) GetAllUsers(ctx context.Context) (out []user.UserDto, err error) {
+	models, err := u.UserRepository.GetAllUsers(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, model := range models {
+		out = append(out, user.UserDto{}.MapFromModel(model))
+	}
+
+	return out, nil
+}
+
 func (u *userUsecases) Add(ctx context.Context, in user.AddUserDto) (userId int64, err error) {
 	model, err := in.MapToModel()
 	if err != nil {
@@ -69,7 +82,10 @@ func (u *userUsecases) Update(ctx context.Context, in user.UpdateUserDto) (err e
 	return err
 }
 
-func (u *userUsecases) ChangePassword(ctx context.Context, in user.ChangeUserPasswordDto) (err error) {
+func (u *userUsecases) ChangePassword(
+	ctx context.Context,
+	in user.ChangeUserPasswordDto,
+) (err error) {
 	user, err := u.UserRepository.GetById(ctx, in.Id)
 	if err != nil {
 		return err

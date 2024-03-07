@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="w-full flex flex-col mt-20 items-center ">
-        <h1 className="flex text-4xl font-bold my-5 w-1/2">Publishing</h1>
+        <h1 className="flex text-6xl font-bold my-8 w-8/12">Publishing</h1>
         <Posts />
       </div>
     </QueryClientProvider>

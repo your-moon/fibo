@@ -41,7 +41,7 @@ export default function Posts() {
 
   console.log(data);
   return (
-    <div className="flex flex-row flex-wrap">
+    <div className="flex flex-row flex-wrap w-8/12 gap-2">
       {data.data.map((article: RPost) => (
         <div key={article.Id}>
           <SinglePost
