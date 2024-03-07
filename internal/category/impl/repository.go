@@ -42,6 +42,7 @@ func (p *catRepository) GetCategories(
 	if err != nil {
 		return nil, errors.Wrap(err, errors.DatabaseError, "get categories failed")
 	}
+	fmt.Println(err)
 	defer rows.Close()
 
 	var result []category.CategoryModel

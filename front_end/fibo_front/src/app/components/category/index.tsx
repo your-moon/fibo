@@ -54,7 +54,14 @@ function Categories({ categoryId, setCategoryId }: CategoryCompProps) {
 
   if (isPending) return <Spinner color="success" className="mx-5" />;
 
-  if (error) return <div>Error: {error.message}</div>;
+  if (error)
+    return (
+      <Select variant="bordered">
+        <SelectItem key="0" value="0">
+          Error
+        </SelectItem>
+      </Select>
+    );
 
   console.log(categories);
   return (
