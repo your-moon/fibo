@@ -24,6 +24,9 @@
   ul {
     @apply list-disc;
   }
+  b {
+    @apply font-bold;
+  }
 }
 @tailwind components;
 @tailwind utilities;

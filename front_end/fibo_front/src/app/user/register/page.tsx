@@ -39,8 +39,11 @@ export default function Login() {
     }
   };
   return (
-    <div className="h-screen flex flex-row items-center justify-center">
-      <div className="flex flex-col items-center">
+    <div className="h-screen flex flex-row justify-center">
+      <div className="flex flex-col items-center mt-40">
+        <h1 className="text-6xl font-extrabold mb-20 text-emerald-400">
+          Sign up
+        </h1>
         <form onSubmit={onSubm} className="w-52">
           <Input
             variant="bordered"
@@ -74,7 +77,7 @@ export default function Login() {
             className="mb-2"
           />
           <Button type="submit" className="w-full">
-            Register
+            Sign up
           </Button>
         </form>
       </div>
