@@ -56,7 +56,7 @@ function Categories({ categoryId, setCategoryId }: CategoryCompProps) {
 
   if (error)
     return (
-      <Select variant="bordered">
+      <Select className="min-w-[200px] max-w-250px mx-4" variant="bordered">
         <SelectItem key="0" value="0">
           Error
         </SelectItem>

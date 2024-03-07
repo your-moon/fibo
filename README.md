@@ -116,6 +116,32 @@ Flags:
       --env-path=STRING    Path to env config file
 ```
 
+### Before run the exec file
+
+Make sure set the environment variables
+
+```shell
+export HTTP_HOST=127.0.0.1
+export HTTP_PORT=3005
+export HTTP_DETAILED_ERROR=false
+
+export DATABASE_URL=postgresql://localhost:5432/fibo
+export ACCESS_TOKEN_EXPIRES_TTL=180 #In minutes
+export ACCESS_TOKEN_SECRET=secret
+
+```
+
+#### Migration
+
+Make sure set the database url in makefile
+
+```shell
+// Makefile
+PROJECT_NAME = 'fibo'
+DB_URL = 'postgresql://localhost:5432/fibo?sslmode=disable'
+
+```
+
 **Configuration** is based on the environment variables. See [.env.template](./config/env/.env.template).
 
 ```shell
