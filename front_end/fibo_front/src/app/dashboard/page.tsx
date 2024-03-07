@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import Cookie from "js-cookie";
 import { BACKEND_URL } from "../provider";
 import Loading from "../components/loader";
+import { Salary } from "../components/salary";
 
 const queryClient = new QueryClient();
 export default function Page() {
@@ -25,7 +26,7 @@ export default function Page() {
 function Dashboard() {
   const token = Cookie.get("token");
   const { isPending, error, data } = useQuery({
-    queryKey: ["user"],
+    queryKey: ["posts"],
     queryFn: () =>
       fetch(`${BACKEND_URL}/users/me/posts`, {
         method: "GET",
@@ -38,7 +39,7 @@ function Dashboard() {
 
   useEffect(() => {
     if (data) {
-      console.log(data);
+      console.log(data.data);
     }
   });
 
@@ -56,7 +57,10 @@ function Dashboard() {
 
   return (
     <div className="mx-80 mt-12">
-      <Reputation />
+      <div className="flex flex-row ">
+        <Reputation />
+        <Salary />
+      </div>
       <h1 className="text-3xl font-bold my-3">My Published Posts</h1>
       <MyPublishedPosts data={data.data} />
       <h1 className="text-3xl font-bold my-3">My Drafts</h1>

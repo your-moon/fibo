@@ -1,16 +1,16 @@
 import { Card, CardBody, CardHeader } from "@nextui-org/react";
 
-export const Reputation = () => {
+export const Salary = () => {
   return (
     <Card
       radius="lg"
-      className="mr-6 min-w-[380px] max-w-[460px] min-h-[250px]"
+      className="mx-6 min-w-[380px] max-w-[460px] min-h-[250px]"
     >
       <CardHeader className=" ml-10 mt-6 justify-between">
-        <h3 className="font-bold">Reputation Point</h3>
+        <h3 className="font-bold">Ongoing Salary</h3>
       </CardHeader>
       <CardBody className="flex justify-center items-center">
-        <p className="text-6xl font-bold text-violet-300 py-5">100</p>
+        <p className="text-6xl font-bold text-emerald-400 py-5">1223$</p>
       </CardBody>
     </Card>
   );

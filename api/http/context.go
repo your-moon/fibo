@@ -42,7 +42,7 @@ func setUserId(c *gin.Context, userId int64) {
 	c.Set(reqInfoKey, request.RequestInfo{UserId: userId})
 }
 
-func getReqInfo(c *gin.Context) request.RequestInfo {
+func GetReqInfo(c *gin.Context) request.RequestInfo {
 	info, ok := c.Get(reqInfoKey)
 	if ok {
 		return info.(request.RequestInfo)

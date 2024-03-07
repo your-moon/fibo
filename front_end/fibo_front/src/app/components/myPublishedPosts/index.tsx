@@ -17,6 +17,7 @@ export default function MyPublishedPosts({ data }: MyPublishedPostsProps) {
             likes={post.Likes}
             title={post.Title}
             content={post.Content}
+            categoryId={post.CategoryId}
           />
         ))}
     </div>

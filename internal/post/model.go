@@ -11,6 +11,7 @@ type PostModel struct {
 	UserId      int64
 	Title       string
 	Content     string
+	CategoryId  int64
 	Likes       int64
 	IsPublished bool
 	CreatedAt   string
@@ -18,12 +19,19 @@ type PostModel struct {
 	DeletedAt   string
 }
 
-func NewPost(userId int64, title string, content string, isPublished bool) (PostModel, error) {
+func NewPost(
+	userId int64,
+	title string,
+	content string,
+	isPublished bool,
+	categoryId int64,
+) (PostModel, error) {
 	post := PostModel{
 		UserId:      userId,
 		Title:       title,
 		Content:     content,
 		IsPublished: isPublished,
+		CategoryId:  categoryId,
 	}
 
 	if err := post.Validate(); err != nil {
@@ -33,7 +41,13 @@ func NewPost(userId int64, title string, content string, isPublished bool) (Post
 	return post, nil
 }
 
-func (post *PostModel) Update(title string, content string, isPublished bool, likes int64) error {
+func (post *PostModel) Update(
+	title string,
+	content string,
+	isPublished bool,
+	likes int64,
+	categoryId int64,
+) error {
 	if len(title) > 0 {
 		post.Title = title
 	}
@@ -43,6 +57,8 @@ func (post *PostModel) Update(title string, content string, isPublished bool, li
 	}
 
 	post.IsPublished = isPublished
+
+	post.CategoryId = categoryId
 
 	if likes > 0 {
 		post.Likes = likes

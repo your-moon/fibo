@@ -1,5 +1,10 @@
+import Page from "@/app/dashboard/page";
 import { EditSinglePost } from "../editSinglePost";
 import { RPost } from "../posts";
+import { SingleCat } from "../category";
+import { BACKEND_URL } from "@/app/provider";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 interface DraftProps {
   data: RPost[];
@@ -17,6 +22,7 @@ export default function Draft({ data }: DraftProps) {
             likes={post.Likes}
             title={post.Title}
             content={post.Content}
+            categoryId={post.CategoryId}
           />
         ))}
     </div>

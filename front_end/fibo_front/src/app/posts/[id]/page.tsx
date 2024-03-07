@@ -4,6 +4,7 @@ import Loading from "@/app/components/loader";
 import PostContent from "@/app/components/postcontent";
 import { RPost } from "@/app/components/posts";
 import { BACKEND_URL } from "@/app/provider";
+import { Button } from "@nextui-org/react";
 import {
   QueryClient,
   QueryClientProvider,
@@ -38,8 +39,12 @@ function SinglePostPage({ params }: { params: { id: number } }) {
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <div className="mx-96 mt-20">
+    <div className="mx-96 mt-20 flex flex-col ">
+      <h1 className="mb-12">{data.data.Title}</h1>
       <PostContent content={data.data.Content} />
+      <div className="flex flex-row-reverse my-20">
+        <Button disabled={true}>{data.data.Likes} Likes</Button>
+      </div>
     </div>
   );
 }

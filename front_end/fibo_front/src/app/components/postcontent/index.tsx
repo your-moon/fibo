@@ -5,9 +5,7 @@ const edjsParser = edjsHTML();
 
 const PostContent = (props: { content: string }) => {
   const json = JSON.parse(props.content);
-  console.log(json);
   let htmlArray = edjsParser.parse(json);
-  console.log(htmlArray);
   return (
     <div>
       {htmlArray.map((html, index) => (

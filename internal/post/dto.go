@@ -5,6 +5,7 @@ type PostDto struct {
 	UserId      int64  `json:"userId"`
 	Title       string `json:"title"`
 	Content     string `json:"content"`
+	CategoryId  int64  `json:"category_id"`
 	IsPublished bool   `json:"is_published"`
 	CreatedAt   string `json:"createdAt"`
 	UpdatedAt   string `json:"updatedAt"`
@@ -16,10 +17,11 @@ type AddPostDto struct {
 	Title       string `json:"title"`
 	Content     string `json:"content"`
 	IsPublished bool   `json:"is_published"`
+	CategoryId  int64  `json:"category_id"`
 }
 
 func (p AddPostDto) MapToModel() (PostModel, error) {
-	return NewPost(p.UserId, p.Title, p.Content, p.IsPublished)
+	return NewPost(p.UserId, p.Title, p.Content, p.IsPublished, p.CategoryId)
 }
 
 type UpdatePostDto struct {
@@ -28,6 +30,7 @@ type UpdatePostDto struct {
 	Content     string `json:"content"`
 	IsPublished bool   `json:"is_published"`
 	Likes       int64  `json:"likes"`
+	CategoryId  int64  `json:"category_id"`
 }
 
 func (p UpdatePostDto) MapToModel() PostModel {
@@ -37,5 +40,6 @@ func (p UpdatePostDto) MapToModel() PostModel {
 		Content:     p.Content,
 		IsPublished: p.IsPublished,
 		Likes:       p.Likes,
+		CategoryId:  p.CategoryId,
 	}
 }

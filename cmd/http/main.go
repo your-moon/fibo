@@ -7,9 +7,11 @@ import (
 
 	"fibo/api/cli"
 	"fibo/api/http"
+	postControllerImpl "fibo/api/http/postcontroller/impl"
 	authImpl "fibo/internal/auth/impl"
 	cryptoImpl "fibo/internal/base/crypto/impl"
 	databaseImpl "fibo/internal/base/database/impl"
+	categoryImpl "fibo/internal/category/impl"
 	postImpl "fibo/internal/post/impl"
 	userImpl "fibo/internal/user/impl"
 )
@@ -68,12 +70,34 @@ func main() {
 
 	postUsecases := postImpl.NewPostUsecase(postUsecasesOpts)
 
+	catRepositoryOpts := categoryImpl.CatRepositoryOpts{
+		ConnManager: dbService,
+	}
+	catRepository := categoryImpl.NewCatRepository(catRepositoryOpts)
+
+	catUsecasesOpts := categoryImpl.CatUsecaseOpts{
+		CatRepository: catRepository,
+		TxManager:     dbService,
+	}
+
+	catUsecases := categoryImpl.NewCatUsecase(catUsecasesOpts)
+
+	postControllerOpts := postControllerImpl.PostControllerOpts{
+		PostUsecase: postUsecases,
+		Config:      conf.HTTP(),
+		CatUsecase:  catUsecases,
+	}
+
+	postController := postControllerImpl.NewPostController(postControllerOpts)
+
 	serverOpts := http.ServerOpts{
-		UserUsecases: userUsecases,
-		AuthService:  authService,
-		Crypto:       crypto,
-		Config:       conf.HTTP(),
-		Post:         postUsecases,
+		UserUsecases:   userUsecases,
+		AuthService:    authService,
+		Crypto:         crypto,
+		Config:         conf.HTTP(),
+		Post:           postUsecases,
+		Category:       catUsecases,
+		PostController: postController,
 	}
 	server := http.NewServer(serverOpts)
 

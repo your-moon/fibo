@@ -35,7 +35,7 @@ func (p *postRepository) Update(
 ) (int64, error) {
 	sql, _, err := databaseImpl.QueryBuilder.
 		Update("posts").
-		Set(goqu.Record{"title": post.Title, "content": post.Content, "is_published": post.IsPublished, "likes": post.Likes}).
+		Set(goqu.Record{"title": post.Title, "content": post.Content, "is_published": post.IsPublished, "likes": post.Likes, "category_id": post.CategoryId}).
 		Where(goqu.Ex{"id": post.Id}).
 		ToSQL()
 	fmt.Println(sql)
@@ -57,7 +57,9 @@ func (r *postRepository) Create(ctx context.Context, post post.PostModel) (int64
 		"title":        post.Title,
 		"content":      post.Content,
 		"is_published": post.IsPublished,
+		"category_id":  post.CategoryId,
 	}).Returning("id").ToSQL()
+	fmt.Println(sql)
 	if err != nil {
 		return 0, errors.Wrap(err, errors.DatabaseError, "syntax error post create")
 	}
@@ -90,9 +92,11 @@ func (r *postRepository) GetById(ctx context.Context, postId int64) (post.PostMo
 	var createdAt time.Time
 	var updatedAt time.Time
 	var deletedAt sqlS.NullTime
-	if err := row.Scan(&p.Id, &p.UserId, &p.Title, &p.Content, &p.IsPublished, &p.Likes, &createdAt, &updatedAt, &deletedAt); err != nil {
+	var category sqlS.NullInt64
+	if err := row.Scan(&p.Id, &p.UserId, &p.Title, &p.Content, &p.IsPublished, &p.Likes, &createdAt, &updatedAt, &deletedAt, &category); err != nil {
 		return post.PostModel{}, errors.Wrap(err, errors.DatabaseError, "scan post failed")
 	}
+	p.CategoryId = category.Int64
 	p.CreatedAt = createdAt.Format(time.RFC3339)
 	p.UpdatedAt = updatedAt.Format(time.RFC3339)
 	if deletedAt.Valid {
@@ -125,9 +129,11 @@ func (r *postRepository) GetPublishedPosts(ctx context.Context) ([]post.PostMode
 		var createdAt time.Time
 		var updatedAt time.Time
 		var deletedAt sqlS.NullTime
-		if err := rows.Scan(&p.Id, &p.UserId, &p.Title, &p.Content, &p.IsPublished, &p.Likes, &createdAt, &updatedAt, &deletedAt); err != nil {
+		var category sqlS.NullInt64
+		if err := rows.Scan(&p.Id, &p.UserId, &p.Title, &p.Content, &p.IsPublished, &p.Likes, &createdAt, &updatedAt, &deletedAt, &category); err != nil {
 			return nil, errors.Wrap(err, errors.DatabaseError, "scan post failed")
 		}
+		p.CategoryId = category.Int64
 		p.CreatedAt = createdAt.Format(time.RFC3339)
 		p.UpdatedAt = updatedAt.Format(time.RFC3339)
 		if deletedAt.Valid {
@@ -162,9 +168,11 @@ func (r *postRepository) GetMyPosts(ctx context.Context, userId int64) ([]post.P
 		var createdAt time.Time
 		var updatedAt time.Time
 		var deletedAt sqlS.NullTime
-		if err := rows.Scan(&p.Id, &p.UserId, &p.Title, &p.Content, &p.IsPublished, &p.Likes, &createdAt, &updatedAt, &deletedAt); err != nil {
+		var category sqlS.NullInt64
+		if err := rows.Scan(&p.Id, &p.UserId, &p.Title, &p.Content, &p.IsPublished, &p.Likes, &createdAt, &updatedAt, &deletedAt, &category); err != nil {
 			return nil, errors.Wrap(err, errors.DatabaseError, "scan post failed")
 		}
+		p.CategoryId = category.Int64
 		p.CreatedAt = createdAt.Format(time.RFC3339)
 		p.UpdatedAt = updatedAt.Format(time.RFC3339)
 		if deletedAt.Valid {
@@ -200,10 +208,12 @@ func (r *postRepository) GetPosts(
 		var createdAt time.Time
 		var updatedAt time.Time
 		var deletedAt sqlS.NullTime
-		if err := rows.Scan(&p.Id, &p.UserId, &p.Title, &p.Content, &p.IsPublished, &p.Likes, &createdAt, &updatedAt, &deletedAt); err != nil {
+		var category sqlS.NullInt64
+		if err := rows.Scan(&p.Id, &p.UserId, &p.Title, &p.Content, &p.IsPublished, &p.Likes, &createdAt, &updatedAt, &deletedAt, &category); err != nil {
 			fmt.Println(err)
 			return nil, errors.Wrap(err, errors.DatabaseError, "scan post failed")
 		}
+		p.CategoryId = category.Int64
 		p.CreatedAt = createdAt.Format(time.RFC3339)
 		p.UpdatedAt = updatedAt.Format(time.RFC3339)
 		if deletedAt.Valid {

@@ -70,7 +70,7 @@ func (p *postUseCase) UpdatePost(
 		return err
 	}
 
-	err = model.Update(post.Title, post.Content, post.IsPublished, post.Likes)
+	err = model.Update(post.Title, post.Content, post.IsPublished, post.Likes, post.CategoryId)
 	if err != nil {
 		return err
 	}
@@ -93,8 +93,6 @@ func (p *postUseCase) AddPost(ctx context.Context, post post.AddPostDto) (postId
 		return 0, err
 	}
 
-	fmt.Println("model")
-	fmt.Println(model)
 	err = p.RunTx(ctx, func(ctx context.Context) error {
 		postId, err = p.PostRepository.Create(ctx, model)
 		if err != nil {
