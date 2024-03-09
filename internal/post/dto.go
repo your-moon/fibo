@@ -1,5 +1,9 @@
 package post
 
+type LikePostDto struct {
+	Likes int64 `json:"likes"`
+}
+
 type PostDto struct {
 	Id          int64  `json:"id"`
 	UserId      int64  `json:"userId"`

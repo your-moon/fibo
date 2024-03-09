@@ -25,6 +25,19 @@ type postUseCase struct {
 	database.TxManager
 }
 
+func (p *postUseCase) LikePost(
+	ctx context.Context,
+	postId int64,
+	likes post.LikePostDto,
+) (err error) {
+	err = p.RunTx(ctx, func(ctx context.Context) error {
+		err = p.PostRepository.LikePost(ctx, postId, likes)
+		return err
+	})
+
+	return err
+}
+
 func (p *postUseCase) GetTotalLikesCountByUser(
 	ctx context.Context,
 	userId int64,

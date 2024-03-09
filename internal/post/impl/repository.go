@@ -29,6 +29,29 @@ type postRepository struct {
 	databaseImpl.ConnManager
 }
 
+func (p *postRepository) LikePost(
+	ctx context.Context,
+	postId int64,
+	likes post.LikePostDto,
+) error {
+	sql, _, err := databaseImpl.QueryBuilder.
+		Update("posts").
+		Set(goqu.Record{"likes": likes.Likes}).
+		Where(goqu.Ex{"id": postId}).
+		ToSQL()
+	fmt.Println(sql)
+	if err != nil {
+		return errors.Wrap(err, errors.DatabaseError, "syntax error")
+	}
+
+	_, err = p.Conn(ctx).Exec(ctx, sql)
+	if err != nil {
+		return errors.Wrap(err, errors.DatabaseError, "like post failed")
+	}
+
+	return nil
+}
+
 func (p *postRepository) Update(
 	ctx context.Context,
 	post post.PostModel,

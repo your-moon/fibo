@@ -3,6 +3,7 @@ package post
 import "context"
 
 type PostRepository interface {
+	LikePost(ctx context.Context, postId int64, liekes LikePostDto) error
 	Create(ctx context.Context, post PostModel) (int64, error)
 	GetPosts(ctx context.Context) ([]PostModelWithUser, error)
 	GetMyPosts(ctx context.Context, userId int64) ([]PostModelWithUser, error)

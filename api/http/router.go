@@ -38,17 +38,20 @@ func (r *router) init() {
 	userRoutes := r.engine.Group("/users")
 	{
 		userRoutes.POST("", r.addUser)
-		userRoutes.GET("/me", r.authenticate, r.getMe)
 		userRoutes.PUT("/me", r.authenticate, r.updateMe)
+		userRoutes.GET("/me", r.authenticate, r.getMe)
 		userRoutes.PATCH("/me/password", r.authenticate, r.changeMyPassword)
 		userRoutes.GET("/me/posts", r.authenticate, r.getMyPosts)
+		// admin
 		userRoutes.GET("/all", r.authenticate, r.getAllUsers)
 	}
 
 	// Post routes
 	postRoutes := r.engine.Group("/posts")
 	{
+		postRoutes.POST("/like/:id", r.LikePost)
 		postRoutes.POST("", r.authenticate, r.postcontroller.AddPostC)
+		// admin
 		postRoutes.GET("", r.getPosts)
 		postRoutes.GET("/:id", r.getPostById)
 		postRoutes.PUT("/:id", r.authenticate, r.updatePost)
@@ -82,6 +85,28 @@ func corsMiddleware() gin.HandlerFunc {
 
 		c.Next()
 	}
+}
+
+func (r *router) LikePost(c *gin.Context) {
+	postId, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	var likePostDto post.LikePostDto
+
+	if err := BindBody(&likePostDto, c); err != nil {
+		ErrorResponse(err, nil, r.config.DetailedError()).Reply(c)
+		return
+	}
+	if err != nil {
+		ErrorResponse(err, nil, r.config.DetailedError()).Reply(c)
+		return
+	}
+
+	err = r.postUsecases.LikePost(c, postId, likePostDto)
+	if err != nil {
+		ErrorResponse(err, nil, r.config.DetailedError()).Reply(c)
+		return
+	}
+
+	OkResponse(nil).Reply(c)
 }
 
 func (r *router) getTotalLikesCountByUser(c *gin.Context) {

@@ -3,6 +3,7 @@ package post
 import "context"
 
 type PostUseCase interface {
+	LikePost(ctx context.Context, postId int64, likes LikePostDto) error
 	AddPost(ctx context.Context, post AddPostDto) (int64, error)
 	GetPosts(ctx context.Context) ([]PostModelWithUser, error)
 	GetMyPosts(ctx context.Context, userId int64) ([]PostModelWithUser, error)
