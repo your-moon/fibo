@@ -6,6 +6,11 @@ import (
 	"fibo/internal/base/errors"
 )
 
+type PostModelWithLikesCount struct {
+	Id         int64 `db:"id"`
+	LikesCount int64 `db:"likes_count"`
+}
+
 type PostModelWithUser struct {
 	Id          int64
 	UserId      int64

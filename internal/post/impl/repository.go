@@ -153,6 +153,29 @@ func (r *postRepository) GetPublishedPosts(ctx context.Context) ([]post.PostMode
 	return posts, nil
 }
 
+func (r *postRepository) GetTotalLikesCountByUser(
+	ctx context.Context,
+	userId int64,
+) (int64, error) {
+	sql, _, err := databaseImpl.QueryBuilder.
+		From("posts").
+		Select(goqu.SUM("likes").As("total_likes_count")).
+		Where(goqu.Ex{"user_id": userId}).
+		ToSQL()
+	fmt.Println(sql)
+	if err != nil {
+		return 0, errors.Wrap(err, errors.DatabaseError, "syntax error get total likes count")
+	}
+
+	row := r.Conn(ctx).QueryRow(ctx, sql)
+	var totalLikesCount int64
+	if err := row.Scan(&totalLikesCount); err != nil {
+		return 0, errors.Wrap(err, errors.DatabaseError, "scan total likes count failed")
+	}
+
+	return totalLikesCount, nil
+}
+
 func (r *postRepository) GetMyPosts(
 	ctx context.Context,
 	userId int64,

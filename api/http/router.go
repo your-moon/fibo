@@ -53,6 +53,7 @@ func (r *router) init() {
 		postRoutes.GET("/:id", r.getPostById)
 		postRoutes.PUT("/:id", r.authenticate, r.updatePost)
 		postRoutes.GET("/published", r.getPublishedPosts)
+		postRoutes.GET("/me/likes", r.authenticate, r.getTotalLikesCountByUser)
 	}
 
 	// Category routes
@@ -69,7 +70,7 @@ func (r *router) init() {
 
 func corsMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
@@ -81,6 +82,18 @@ func corsMiddleware() gin.HandlerFunc {
 
 		c.Next()
 	}
+}
+
+func (r *router) getTotalLikesCountByUser(c *gin.Context) {
+	reqInfo := GetReqInfo(c)
+
+	likes, err := r.postUsecases.GetTotalLikesCountByUser(c, reqInfo.UserId)
+	if err != nil {
+		ErrorResponse(err, nil, r.config.DetailedError()).Reply(c)
+		return
+	}
+
+	OkResponse(likes).Reply(c)
 }
 
 func (r *router) addCategory(c *gin.Context) {

@@ -49,8 +49,8 @@ type UserRepository_Add_Call struct {
 }
 
 // Add is a helper method to define mock.On call
-//  - ctx context.Context
-//  - _a1 user.UserModel
+//   - ctx context.Context
+//   - _a1 user.UserModel
 func (_e *UserRepository_Expecter) Add(ctx interface{}, _a1 interface{}) *UserRepository_Add_Call {
 	return &UserRepository_Add_Call{Call: _e.mock.On("Add", ctx, _a1)}
 }
@@ -65,6 +65,26 @@ func (_c *UserRepository_Add_Call) Run(run func(ctx context.Context, _a1 user.Us
 func (_c *UserRepository_Add_Call) Return(_a0 int64, _a1 error) *UserRepository_Add_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
+}
+
+func (_m *UserRepository) GetAllUsers(ctx context.Context) ([]user.UserModel, error) {
+	ret := _m.Called(ctx)
+
+	var r0 []user.UserModel
+	if rf, ok := ret.Get(0).(func(context.Context) []user.UserModel); ok {
+		r0 = rf(ctx)
+	} else {
+		r0 = ret.Get(0).([]user.UserModel)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // GetByEmail provides a mock function with given fields: ctx, email
@@ -94,8 +114,8 @@ type UserRepository_GetByEmail_Call struct {
 }
 
 // GetByEmail is a helper method to define mock.On call
-//  - ctx context.Context
-//  - email string
+//   - ctx context.Context
+//   - email string
 func (_e *UserRepository_Expecter) GetByEmail(ctx interface{}, email interface{}) *UserRepository_GetByEmail_Call {
 	return &UserRepository_GetByEmail_Call{Call: _e.mock.On("GetByEmail", ctx, email)}
 }
@@ -139,8 +159,8 @@ type UserRepository_GetById_Call struct {
 }
 
 // GetById is a helper method to define mock.On call
-//  - ctx context.Context
-//  - userId int64
+//   - ctx context.Context
+//   - userId int64
 func (_e *UserRepository_Expecter) GetById(ctx interface{}, userId interface{}) *UserRepository_GetById_Call {
 	return &UserRepository_GetById_Call{Call: _e.mock.On("GetById", ctx, userId)}
 }
@@ -184,8 +204,8 @@ type UserRepository_Update_Call struct {
 }
 
 // Update is a helper method to define mock.On call
-//  - ctx context.Context
-//  - _a1 user.UserModel
+//   - ctx context.Context
+//   - _a1 user.UserModel
 func (_e *UserRepository_Expecter) Update(ctx interface{}, _a1 interface{}) *UserRepository_Update_Call {
 	return &UserRepository_Update_Call{Call: _e.mock.On("Update", ctx, _a1)}
 }
