@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.32.0 (HEAD)
+  labels:
+    io.kompose.service: app
+  name: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: app
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.32.0 (HEAD)
+      labels:
+        io.kompose.network/fibo-network: "true"
+        io.kompose.service: app
+    spec:
+      containers:
+        - env:
+            - name: ACCESS_TOKEN_EXPIRES_TTL
+              value: "180"
+            - name: ACCESS_TOKEN_SECRET
+              value: secret
+            - name: DATABASE_URL
+              value: postgresql://fibo:fibo@postgres:5432/fibo
+            - name: HTTP_DETAILED_ERROR
+              value: "false"
+            - name: HTTP_HOST
+              value: 0.0.0.0
+            - name: HTTP_PORT
+              value: "3005"
+          image: app
+          name: fibo-backend
+          ports:
+            - containerPort: 3005
+              hostPort: 3005
+              protocol: TCP
+      restartPolicy: Always

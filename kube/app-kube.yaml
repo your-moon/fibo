@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fibo-app
+  labels:
+    app: fibo-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fibo-app
+  template:
+    metadata:
+      labels:
+        app: fibo-app
+    spec:
+      containers:
+        - name: fibo-app
+          image: moonnse/fibo-app:latest
+          ports:
+            - containerPort: 3005
+          env:
+            - name: ACCESS_TOKEN_EXPIRES_TTL
+              value: "180"
+            - name: ACCESS_TOKEN_SECRET
+              value: secret
+            - name: DATABASE_URL
+              value: postgresql://fibo:fibo@postgres:5432/fibo
+            - name: HTTP_DETAILED_ERROR
+              value: "true"
+            - name: HTTP_HOST
+              value: 0.0.0.0
+            - name: HTTP_PORT
+              value: "3005"

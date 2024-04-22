@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-secret
+  labels:
+    app: postgres
+data:
+  POSTGRES_PASSWORD: fibo
+  POSTGRES_USER: fibo
+  POSTGRES_DB: fibo
+

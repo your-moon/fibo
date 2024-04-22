@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"fibo/api/cli"
@@ -31,7 +30,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(err)
+	log.Println(err)
 
 	defer dbClient.Close()
 

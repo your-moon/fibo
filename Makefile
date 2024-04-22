@@ -93,16 +93,6 @@ docker-up:
 docker-down:
 	@docker-compose down
 
-.SILENT: env
-env:
-	@export HTTP_HOST=127.0.0.1
-	@export HTTP_PORT=3005
-	@export HTTP_DETAILED_ERROR=false
-	@export DATABASE_URL=postgresql://localhost:5432/fibo
-	@export ACCESS_TOKEN_EXPIRES_TTL=180 #In minutes
-	@export ACCESS_TOKEN_SECRET=secret
-
-
 .SILENT: build-run
 build-run:
 	@make build-http

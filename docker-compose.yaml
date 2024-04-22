@@ -35,12 +35,13 @@ services:
       - postgres
   app:
     build: .
+    container_name: fibo-backend
     ports:
       - "3005:3005"
     environment:
       - HTTP_HOST=0.0.0.0
       - HTTP_PORT=3005
-      - HTTP_DETAILED_ERROR=false
+      - HTTP_DETAILED_ERROR=true
       - DATABASE_URL=postgresql://fibo:fibo@postgres:5432/fibo
       - ACCESS_TOKEN_EXPIRES_TTL=180
       - ACCESS_TOKEN_SECRET=secret
